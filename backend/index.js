@@ -18,12 +18,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-    credentials: true,
-  })
-);
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://havenly-2rfm-sepia.vercel.app"
+    ],
+    credentials: true
+}));
 
 // Temporarily check whether Cloudinary credentials are loaded
 console.log("Cloudinary environment check:", {
