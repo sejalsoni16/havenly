@@ -1,6 +1,7 @@
 import uploadOnCloudinary from "../config/cloudinaryy.js";
 import Listing from "../model/listing.model.js";
 import User from "../model/user.model.js";
+import mongoose from "mongoose";
 
 export const addListing = async (req, res) => {
   try {
@@ -83,18 +84,34 @@ export const addListing = async (req, res) => {
   }
 
 
-  export const findListing = async(req,res)=>{
-    try {
-      let {id} = req.params
-      let listing = await Listing.findById(id);
-      if(!listing){
-        return res.status(400).json({message:"listing not found"})
-      }
-      res.status(200).json(listing)
-    } catch (error) {
-      return res.status(500).json({message:`findListing error ${error}`})
+  export const findListing = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid listing ID"
+      });
     }
+
+    const listing = await Listing.findById(id);
+
+    if (!listing) {
+      return res.status(404).json({
+        message: "Listing not found"
+      });
+    }
+
+    return res.status(200).json(listing);
+
+  } catch (error) {
+    console.error("findListing error:", error);
+
+    return res.status(500).json({
+      message: "Unable to retrieve listing"
+    });
   }
+};
 
   export const updateListing = async(req,res) => {
     try {

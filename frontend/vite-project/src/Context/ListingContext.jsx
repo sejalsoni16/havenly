@@ -72,7 +72,10 @@ function ListingContext({children}) {
 
   const handleViewCard = async (id) => {
     try {
-      let result = await axios.get( serverUrl + `/api/listing/findlistingByid/${id}`,{withCredentials:true})
+      let result = await axios.get(
+        `${serverUrl}/api/listing/findlistingbyid/${id}`,
+        { withCredentials: true }
+        );
       console.log(result)
       setCardDetails(result.data)
       navigate("/viewcard")
@@ -80,15 +83,29 @@ function ListingContext({children}) {
       console.log(error)
     }
   }
-  const handleSearch = async (data) => {
-    try {
-      let result = await axios.get(serverUrl + `/api/listing/search?query=${data}`)
-      setSearchData(result.data)
-    } catch (error) {
-      setSearchData(null)
-      console.log(error)
+
+const handleSearch = async (data) => {
+    const query = data.trim();
+
+    // Don't search when the input is empty
+    if (!query) {
+        setSearchData(null);
+        return;
     }
-  }
+
+    try {
+        let result = await axios.get(
+            `${serverUrl}/api/listing/search?query=${encodeURIComponent(query)}`
+        );
+
+        setSearchData(result.data);
+    } catch (error) {
+        setSearchData(null);
+        console.log(error);
+    }
+};
+
+
 
   const getListing = async ()=> {
     try {
